@@ -1,0 +1,16 @@
+FROM golang:1.12-alpine as builder
+
+RUN mkdir /build
+WORKDIR /build
+
+COPY . .
+
+RUN apk add git
+RUN go get 
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build hello-world.go
+
+FROM scratch
+
+COPY --from=builder /build/hello-world /hello-world
+
+ENTRYPOINT ["/hello-world"]

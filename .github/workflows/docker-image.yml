@@ -19,14 +19,38 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+    - name: Build the Docker image based on Golang 1.18
+      run: docker build . --file Dockerfile-golang1.18 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.18-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.18-latest
+    
+    - name: Build the Docker image based on Golang 1.17
+      run: docker build . --file Dockerfile-golang1.17 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.17-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.17-latest
+    
+    - name: Build the Docker image based on Golang 1.16
+      run: docker build . --file Dockerfile-golang1.16 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.16-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.16-latest
+    
+    - name: Build the Docker image based on Golang 1.15
+      run: docker build . --file Dockerfile-golang1.15 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.15-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.15-latest
+    
+    - name: Build the Docker image based on Golang 1.14
+      run: docker build . --file Dockerfile-golang1.14 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.14-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.14-latest
+    
+    - name: Build the Docker image based on Golang 1.13
+      run: docker build . --file Dockerfile-golang1.13 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.13-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.13-latest
+    
+    - name: Build the Docker image based on Golang 1.12
+      run: docker build . --file Dockerfile-golang1.12 --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.12-${{ github.run_number }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.12-latest
     
     - name: Sysdig Secure Inline Scan - New
       run: |
         curl -LO "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner"
         chmod +x ./sysdig-cli-scanner
-        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.18-${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.17-${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.16-${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.15-${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.14-${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.13-${{ github.run_number }} || true
+        SECURE_API_TOKEN=${{ secrets.SECURE_API_TOKEN }} ./sysdig-cli-scanner --apiurl ${{env.SYSDIG_URL}} docker://${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:go1.12-${{ github.run_number }} || true
       
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
