@@ -1,8 +1,10 @@
 package main
 
 import (
+    "os"
     "fmt"
     "net/http"
+    "github.com/sirupsen/logrus"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
@@ -20,6 +22,8 @@ func headers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+    var log = logrus.New()
+    log.Out = os.Stdout
 
     http.HandleFunc("/hello", hello)
     http.HandleFunc("/headers", headers)
